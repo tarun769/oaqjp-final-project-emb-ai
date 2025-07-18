@@ -1,24 +1,17 @@
-import requests  # Import the requests library to handle HTTP requests
-import json
+import unittest
+from EmotionDetection.emotion_detection import emotion_detector
 
-def emotion_detector(text_to_analyze):  # Define a function named sentiment_analyzer that takes a string input (text_to_analyse)
-    url = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
-    myobj = { "raw_document": { "text": text_to_analyze } }
-    header = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
-    response = requests.post(url, json = myobj, headers=header)  # Send a POST request to the API with the text and headers
+class TestEmotionDetection(unittest.TestCase):
+    def test_emotion_detection(self):
+        result_1 = emotion_detector('I am glad this happened')
+        self.assertEqual(result_1['dominant_emotion'], 'joy')
+        result_2 = emotion_detector('I am really mad about this')
+        self.assertEqual(result_2['dominant_emotion'], 'anger')
+        result_3 = emotion_detector('I feel disgusted just hearing about this')
+        self.assertEqual(result_3['dominant_emotion'], 'disgust')
+        result_4 = emotion_detector('I am so sad about this')
+        self.assertEqual(result_4['dominant_emotion'], 'sadness')
+        result_5 = emotion_detector('I am really afraid that this will happen')
+        self.assertEqual(result_5['dominant_emotion'], 'fear')
     
-    data = json.loads(response.text)
-    emotions_list = ['anger', 'disgust', 'fear', 'joy', 'sadness', 'dominant_emotion']
-    emotion_dict = {}
-
-    for key in emotions_list:
-        if response.status_code == 400:
-            emotion_dict[key] = None
-        else:
-            emotions_data = data['emotionPredictions'][0]['emotion']
-            if key == 'dominant_emotion':
-                emotion_dict['dominant_emotion'] = max(emotions_data, key=emotions_data.get)
-            else:
-                emotion_dict[key] = emotions_data[key]
-
-    return emotion_dict
+unittest.main()
