@@ -8,14 +8,17 @@ def emotion_analyzer():
     text_to_analyze = request.args.get('textToAnalyze')
     emotions_data = emotion_detector(text_to_analyze)
 
-    anger_score = str(emotions_data['anger'])
-    disgust_score = str(emotions_data['disgust'])
-    fear_score = str(emotions_data['fear'])
-    joy_score = str(emotions_data['joy'])
-    sadness_score = str(emotions_data['sadness'])
-    dominant_emotion = emotions_data['dominant_emotion']
+    if emotions_data['dominant_emotion'] == None:
+        return 'Invalid text! Please try again!'
+    else:
+        anger_score = str(emotions_data['anger'])
+        disgust_score = str(emotions_data['disgust'])
+        fear_score = str(emotions_data['fear'])
+        joy_score = str(emotions_data['joy'])
+        sadness_score = str(emotions_data['sadness'])
+        dominant_emotion = emotions_data['dominant_emotion']
 
-    return "For the given statement, the system response is '{}' : {}, '{}' : {}, '{}' : {}, '{}' : {} and '{}' : {}. The dominant emotion is {}.".format('anger', anger_score, 'disgust', disgust_score, 'fear', fear_score, 'joy', joy_score, 'sadness', sadness_score, dominant_emotion)
+        return "For the given statement, the system response is '{}' : {}, '{}' : {}, '{}' : {}, '{}' : {} and '{}' : {}. The dominant emotion is {}.".format('anger', anger_score, 'disgust', disgust_score, 'fear', fear_score, 'joy', joy_score, 'sadness', sadness_score, dominant_emotion)
 
 @app.route("/")
 def render_index_page():
